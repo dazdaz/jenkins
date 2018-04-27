@@ -17,8 +17,8 @@ JENKINSADMINPASS=$(cat /var/lib/jenkins/secrets/initialAdminPassword)
 java -jar jenkins-cli.jar -s http://127.0.0.1:8080 who-am-i --username admin --password $JENKINSADMINPASS
 ```
 
-# https://www.digitalocean.com/community/tutorials/how-to-set-up-continuous-integration-pipelines-in-jenkins-on-ubuntu-16-04
-# http://www.scmgalaxy.com/tutorials/complete-guide-to-use-jenkins-cli-command-line
+* https://www.digitalocean.com/community/tutorials/how-to-set-up-continuous-integration-pipelines-in-jenkins-on-ubuntu-16-04
+* http://www.scmgalaxy.com/tutorials/complete-guide-to-use-jenkins-cli-command-line
 
 ## Configure acs-engine
 ```
@@ -36,4 +36,4 @@ go build
 ./acs-engine
 ```
 
-# https://github.com/Azure/acs-engine/blob/master/docs/acsengine.md
+* https://github.com/Azure/acs-engine/blob/master/docs/acsengine.md
