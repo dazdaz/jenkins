@@ -1,4 +1,3 @@
-
 ## Deploy Java
 ```
 sudo apt-get install openjdk-8-jdk
@@ -11,6 +10,8 @@ systemctl restart jenkins
 sudo apt-get install jenkins
 sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 8888888844ce44e3bd49737688888888
+# sudo ufw allow 8080
+# sudo ufw enable
 curl ifconfig.co
 8.8.8.8
 az vm open-port --port 8080 --resource-group u1804-rg --name u1804
@@ -82,9 +83,7 @@ az vm open-port --port 8080 --resource-group u1804-rg --name u1804
 open 8.8.8.8:8080
 ```
 
-
 ## Jenkins
-
 ```
 ## Deploy Jenkins
 sudo wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | sudo apt-key add -
