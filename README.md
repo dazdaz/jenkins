@@ -3,7 +3,6 @@
 sudo apt-get install openjdk-8-jdk
 sudo dpkg --purge --force-depends ca-certificates-java
 sudo apt-get install ca-certificates-java
-systemctl restart jenkins
 ```
 ## Deploy Jenkins
 ```
@@ -45,6 +44,8 @@ Manage Jenkins / Manage Plugins / Available / delivery
 Download delivery-pipeline-plugin manually and upload the hpi file.  Workaround to plugin install hanging
 https://updates.jenkins-ci.org/download/plugins/delivery-pipeline-plugin/
 
+systemctl restart jenkins
+
 Goto + on Main Page
 Goto Delivery Pipeline View
 Pipelines / Component / Add
@@ -66,13 +67,25 @@ Enable Build Pipeline View
 Select Initial Job / SampleBuildJob
 No of displayed Builds / 5
 ```
+## Blue Ocean
+* Blue Ocean is a new interface for Jenkins
+* https://jenkins.io/projects/blueocean/
+* https://jenkins.io/projects/blueocean/roadmap/ Blue Ocean is still a WIP, features are missing and the UI for me was very slow!
+```
+Manage Plugins / Blue Ocean
+Open Blue Ocean (menu on the left)
+```
+# List of all Jenkins plugins
+* https://updates.jenkins-ci.org/download/plugins/
+* http://www.inanzzz.com/index.php/post/jnrg/running-jenkins-build-via-command-line
 
-List of all Jenkins plugins
-https://updates.jenkins-ci.org/download/plugins/
-http://www.inanzzz.com/index.php/post/jnrg/running-jenkins-build-via-command-line
+## Links
+* https://stackoverflow.com/questions/tagged/jenkins
+* https://www.digitalocean.com/community/tutorials/how-to-set-up-continuous-integration-pipelines-in-jenkins-on-ubuntu-16-04
+* http://www.scmgalaxy.com/tutorials/complete-guide-to-use-jenkins-cli-command-line
 
 
-## Deploying Jenkins from Docker (Fails on selecting plugins)
+## Deploying Jenkins from Docker (Fails on selecting plugins) - Don't use.
 ```
 docker run -u root --rm -d -p 8080:8080 -p 50000:50000 -v jenkins-data:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock jenkinsci/blueocean
 docker ps
@@ -84,9 +97,20 @@ curl ifconfig.co
 20.184.25.239
 az vm open-port --port 8080 --resource-group u1804-rg --name u1804
 open 8.8.8.8:8080
-```
 
-## Jenkins
+docker exec -it [containerid]
+/usr/local/bin/install-plugins.sh [plugins]
+http://jenkinsURL/safeRestart
+
+```
+## Create Jenkins Dockerfile
+# Dockerfile
+```
+FROM jenkins/jenkins:lts
+COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
+RUN /usr/local/bin/install-plugins-sh < /usr/share/jenkins/ref/plugins.txt
+```
+## Jenkins (old)
 ```
 ## Deploy Jenkins
 sudo wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | sudo apt-key add -
@@ -103,7 +127,3 @@ wget http://127.0.0.1:8080/jnlpJars/jenkins-cli.jar
 JENKINSADMINPASS=$(cat /var/lib/jenkins/secrets/initialAdminPassword)
 java -jar jenkins-cli.jar -s http://127.0.0.1:8080 who-am-i --username admin --password $JENKINSADMINPASS
 ```
-
-* https://www.digitalocean.com/community/tutorials/how-to-set-up-continuous-integration-pipelines-in-jenkins-on-ubuntu-16-04
-* http://www.scmgalaxy.com/tutorials/complete-guide-to-use-jenkins-cli-command-line
-
