@@ -17,7 +17,7 @@ curl ifconfig.co
 az vm open-port --port 8080 --resource-group u1804-rg --name u1804
 open 8.8.8.8:8080
 ```
-## Freestyle Jobs
+## Creating Jobs
 ```
 New Project / Project Name : SampleBuildJob1 / Freestyle
 Build Triggers / Build / Execute Shell
@@ -35,7 +35,10 @@ Build Triggers / Build / Execute Shell
 date
 echo "Job built successfully."
 Build after other projects are built / SampleDeployJob
+```
 
+## Plugin : Delivery Pipeline
+```
 https://plugins.jenkins.io/delivery-pipeline-plugin
 Manage Jenkins / Manage Plugins / Available / delivery
 
@@ -104,21 +107,3 @@ java -jar jenkins-cli.jar -s http://127.0.0.1:8080 who-am-i --username admin --p
 * https://www.digitalocean.com/community/tutorials/how-to-set-up-continuous-integration-pipelines-in-jenkins-on-ubuntu-16-04
 * http://www.scmgalaxy.com/tutorials/complete-guide-to-use-jenkins-cli-command-line
 
-
-## Configure acs-engine
-```
-mkdir $HOME/gopath
-# Add to $HOME/.profile
-cat >> $HOME/.profile <<_EOF_
-export PATH=$PATH:/usr/local/go/bin
-export GOPATH=$HOME/gopath
-_EOF_
-source $HOME/.profile
-go get github.com/Azure/acs-engine
-go get all
-cd $GOPATH/src/github.com/Azure/acs-engine
-go build
-./acs-engine
-```
-
-* https://github.com/Azure/acs-engine/blob/master/docs/acsengine.md
