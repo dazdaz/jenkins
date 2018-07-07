@@ -67,9 +67,16 @@ Enable Build Pipeline View
 Select Initial Job / SampleBuildJob
 No of displayed Builds / 5
 ```
-## CICD with Containers and Kubernetes Demo
+## CICD Demo using Jenkins with Kubernetes to roll out a container
 ```
-# Run these commands manually to create the deployment and configure the Azure load balancer
+$ git clone https://github.com/dazdaz/hellowhale
+$ docker build . -t hellowhale
+$ docker run -d -p80:80 -name hellowhale hellowhale
+$ docker tag hellowhale dazdaz/hellowhale
+$ docker login -u dazdax -p mypass
+$ docker push dazdax/hellowhale
+
+# Run these commands manually to create the Kubernetes deployment and configure the Azure load balancer
 $ kubectl create deployment hellowhale --image dazdaz/hellowhale
 $ kubectl expose deployment/hellowhale --port=80 --name=hellowhalesvc --type=LoadBalancer
 
@@ -83,7 +90,7 @@ $ chown jenkins:jenkins ~jenkins/.kube/config
 $ cp ~myuser/.kube/config /var/lib/jenkins/.kube/
 $ chown jenkins:jenkins /var/lib/jenkins/.kube/
 
-###################################################### J.E.N.K.I.N.S ##################################################
+################################################### J.E.N.K.I.N.S ###############################################
 Configure System / Global Properties / Environment Variables
 DOCKERHUB_PASS
 mypassword
@@ -128,11 +135,14 @@ Go back to GitHub repo / Settings Integrations / Your integration
 Create a new file within the repo or update a file and then select Test Service
 https://github.com/dazdaz/hellowhale/settings
 
-$ git add html/indexl.html
+# Then to demonstrate the CICD pipeline, modify the index.html and push the changes
+$ git add html/index.html
 $ git commit -m "Changed color to red"
 $ git push
 
-kubectl rollout history deployment/hellowhale
+$ kubectl set image deployment <deployment> <container>=<image>
+$ kubectl rollout history deployment/hellowhale
+$ kubectl rollout undo deployment/hellowhale
 ```
 ## Blue Ocean
 * Blue Ocean is a new interface for Jenkins
@@ -150,7 +160,6 @@ Open Blue Ocean (menu on the left)
 * https://stackoverflow.com/questions/tagged/jenkins
 * https://www.digitalocean.com/community/tutorials/how-to-set-up-continuous-integration-pipelines-in-jenkins-on-ubuntu-16-04
 * http://www.scmgalaxy.com/tutorials/complete-guide-to-use-jenkins-cli-command-line
-
 
 ## Deploying Jenkins from Docker (Fails on selecting plugins) - Don't use.
 ```
