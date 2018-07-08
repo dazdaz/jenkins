@@ -1,3 +1,13 @@
+## To Add into the pipeline:
+* Build Automation
+* Test Automation
+* Security Checks (for e.g. WhiteHat scan)
+* Deployment Automation (for e.g. Bamboo, Urbancode, scripting)
+* Quality Checks (for e.g. SonarQube)
+* Approval (for e.g. manual approval to deploy in UAT, Preprod or Prod environment)
+* Notification, or Group Chat notification (for e.g. Slack, Hipchat).
+
+
 ## Deploy Java on Ubuntu 18.04
 ```
 sudo apt-get install openjdk-8-jdk
