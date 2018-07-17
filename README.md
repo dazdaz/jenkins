@@ -1,3 +1,6 @@
+
+<img src="https://docs.microsoft.com/en-us/azure/architecture/example-scenario/apps/media/devops-with-aks/architecture-devops-with-aks.png">
+
 ## To Add into the pipeline:
 * Build Automation
 * Test Automation
