@@ -111,7 +111,6 @@ mypassword
 Jenkins Location / Sysadmin email
 myuser@myhost.com
 
-Configure System / Add GitHub Server / Override Hook URL (Github will ping Jenkins on this endpoint)
 Check that this IP is really where your Jenkins server listens
 
 GitHub / Settings / Integrations and Services
@@ -149,9 +148,12 @@ Create a new file within the repo or update a file and then select Test Service
 https://github.com/dazdaz/hellowhale/settings
 
 # Then to demonstrate the CICD pipeline, modify the index.html and push the changes
+$ git init
+$ git config user.name "Derek"
+$ git config user.email "derek@indeed.com"
 $ git add html/index.html
-$ git commit -m "Changed color to red"
-$ git push
+$ git commit -am "Change message"
+$ git push origin master
 
 $ kubectl set image deployment <deployment> <container>=<image>
 $ kubectl rollout history deployment/hellowhale
