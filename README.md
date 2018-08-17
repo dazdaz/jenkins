@@ -86,13 +86,48 @@ $ git clone https://github.com/dazdaz/hellowhale
 $ docker build . -t hellowhale
 $ docker run -d -p80:80 -name hellowhale hellowhale
 $ docker tag hellowhale dazdaz/hellowhale
-$ docker login -u dazdax -p mypass
-$ docker push dazdax/hellowhale
+$ docker login -u dazdaz -p mypass
+$ docker push dazdaz/hellowhale
 
-# Run these commands manually to create the Kubernetes deployment and configure the Azure load balancer
-$ kubectl create deployment hellowhale --image dazdaz/hellowhale
-$ kubectl expose deployment/hellowhale --port=80 --name=hellowhalesvc --type=LoadBalancer
+# Store our ACR login credentials into Kubernetes Secrets
+$ kubectl create secret docker-registry acr-cred --docker-server=myacr.azurecr.io --docker-username=myacr --docker-password=<my_password> --docker-email=me@microsoft.com
 
+# Apply this manifest to setup our app and configure the Azure LB
+$ kubectl apply -f deployment-hellowhale-acr.yaml
+```
+```
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: hellowhale
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: hellowhale
+    spec:
+      containers:
+      - name: hellowhale
+        image: myacr.azurecr.io/dazdaz/hellowhale
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+       - name: acr-cred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hellowhale-svc
+spec:
+  selector:
+    app: hellowhale
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+```
+```
 # Add jenkins user to /etc/group as a secondary group so that he can build docker images
 $ sudo usermod -G docker jenkins
 
@@ -128,15 +163,27 @@ https://github.com/dazdaz/hellowhale.git
 
 Enable GitHub hook trigger for GITScm polling
 
-Execute Shell
-# Jenkins Build Config
+# Execute Shell - Choose ACR (here) or DockerHub (below) to store your images
+# Jenkins Build Config using *ACR*
+IMAGE_NAME="dazdaz/hellowhale:${BUILD_NUMBER}"
+docker build . -t $IMAGE_NAME
+docker tag dazdaz/hellowhale:${BUILD_NUMBER} myacr.azurecr.io/dazdaz/hellowhale:${BUILD_NUMBER}
+docker login myacr.azurecr.io -u dazacr -p ${ACR_PASS}
+docker push myacr.azurecr.io/dazdaz/hellowhale:${BUILD_NUMBER}
+
+# Execute Shell - Choose ACR (above) or DockerHub (below) to store your images
+# Jenkins Build Config using *Docker Hub*
 IMAGE_NAME="dazdaz/hellowhale:${BUILD_NUMBER}"
 docker build . -t $IMAGE_NAME
 docker login -u dazdaz -p ${DOCKER_HUB}
 docker push $IMAGE_NAME
 
-Execute Shell
-# Deploy to Kubernetes
+# Execute Shell - Select ACR or DockerHub
+# Deploy to Kubernetes, with container image stored on ACR
+IMAGE_NAME="myacr.azurecr.io/dazdaz/hellowhale:${BUILD_NUMBER}"
+kubectl set image deployments/hellowhale hellowhale=$IMAGE_NAME
+
+# Deploy to Kubernetes, with container image stored on DockerHub
 IMAGE_NAME="dazdaz/hellowhale:${BUILD_NUMBER}"
 kubectl set image deployments/hellowhale hellowhale=$IMAGE_NAME
 
