@@ -10,7 +10,6 @@
 * Approval (for e.g. manual approval to deploy in UAT, Preprod or Prod environment)
 * Notification, or Group Chat notification (for e.g. Slack, Hipchat).
 
-
 ## Deploy Java on Ubuntu 18.04
 ```
 sudo apt-get install openjdk-8-jdk
@@ -206,6 +205,10 @@ $ kubectl set image deployment <deployment> <container>=<image>
 $ kubectl rollout history deployment/hellowhale
 $ kubectl rollout undo deployment/hellowhale
 ```
+
+## Resetting your Jenkins password
+https://www.learnitguide.net/2018/08/reset-jenkins-admin-users-password.html
+
 ## Blue Ocean
 * Blue Ocean is a new interface for Jenkins
 * https://jenkins.io/projects/blueocean/
