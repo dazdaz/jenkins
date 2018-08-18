@@ -178,11 +178,11 @@ docker login -u dazdaz -p ${DOCKER_HUB}
 docker push $IMAGE_NAME
 
 # Execute Shell - Select ACR or DockerHub
-# Deploy to Kubernetes, with container image stored on ACR
+# Set the new image tag on the deployment object, with container image stored on ACR
 IMAGE_NAME="myacr.azurecr.io/dazdaz/hellowhale:${BUILD_NUMBER}"
 kubectl set image deployments/hellowhale hellowhale=$IMAGE_NAME
 
-# Deploy to Kubernetes, with container image stored on DockerHub
+# Set the new image tag on the deployment object, with container image stored on DockerHun
 IMAGE_NAME="dazdaz/hellowhale:${BUILD_NUMBER}"
 kubectl set image deployments/hellowhale hellowhale=$IMAGE_NAME
 
