@@ -1,0 +1,56 @@
+## Deploy docker-compose, Containers for : PostGres 9.6 + SonarQube:lts.  Jenkins is running on an Ubuntu VM outside of a container.
+```
+sudo curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo chmod a+x /usr/local/bin/docker-compose
+docker-compose up -d
+docker-compose logs -f sonarqube
+az vm open-port --port 9000 --resource-group u1804-rg --name u1804 --priority 1234
+curl ifconfig.co
+# point web browser to <IP>:9000 admin / admin
+Change password
+Create token : name : jenkins
+
+version: '2'
+services:
+  postgres:
+    image: postgres:9.6
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonarpasswd
+    volumes:
+      - /var/postgres-data:/var/lib/postgresql/data
+  sonarqube:
+    image: sonarqube:lts
+    ports:
+      - "9000:9000"
+      - "9092:9092"
+    environment:
+      SONARQUBE_JDBC_USERNAME: sonar
+      SONARQUBE_JDBC_PASSWORD: sonarpasswd
+      SONARQUBE_JDBC_URL: "jdbc:postgresql://postgres:5432/sonar"
+    depends_on:
+      - postgres
+```
+
+## Install sonarqube scanner plugin for Jenkins
+```
+Manage Jenkins / Global Tool Configuration / SonarQubeScanner / name: sonar / save
+22a3206ff7fdab934a11fdab10da76f4b0030427
+
+Credentials / Add Credential / jenkins / Global credentials
+Kind: secret text
+
+New Item / name : sonarqube
+New Pipeline / Build Triggers
+Definition : pipeline script from scm / Git / Repo
+Repo URL : https://github.com/wardviaene/jenkins-course.git
+ScriptPath : sonarqube/Jenkinsfile
+```
+
+```
+/opt/gradle/bin/gradle
+Try changing "./gradlew build" in "gradle build". This will use the gradle that comes with the container image instead of the wrapper that comes with the git repository.
+```
+
+## Links
+* https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Jenkins
